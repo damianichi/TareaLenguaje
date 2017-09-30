@@ -1,0 +1,40 @@
+#lang racket
+(define A '(("central" . 6)
+  ("central" . 5)
+  ("central" . 4)
+  ("central" . 3)
+  ("central" . 2)
+  ("central" . 1)));
+
+(define B '((5 . 0) (0 . 1) (1 . 2) (2 . 3) (3 . 4) (4 . 5)))
+
+
+(define testCircSTR '(("C" . "A") ("A" . "B") ("B" . "C")))  ;Grafo de testeo, con nodos numéricos, para verificar si es cíclico
+(define testCircINT '((3 . 1) (1 . 2) (2 . 3)))  ;Grafo de testeo, con nodos numéricos, para verificar si es cíclico
+
+(define testStarSTR '(("central" . 3) ("central" . 2) ("central" . 1))) ;Grafo de testeo, con nodos alfanuméricos, para verificar si es estrella
+(define testStarINT '((1 . 3) (1 . 2) (1 . 1))) ;Grafo de testeo, con nodos numéricos, para verificar si es estrella
+
+(define (star x)(if (= x 0) null (cons  (cons "central" x) (star (- x 1) )))) ;Crea un grafo estrella con 'x' cantidad de nodos.
+
+(define (circIn x)(if (< x 2)null (cons  (cons (- x 1) x) (circIn (- x 1))))) ;Crea un grafo cíclico sin último nodo
+
+(define (circ x) (cons (cons x 1) (reverse(circIn x)))) ;Une el nodo final e inicial de un grafo cíclico
+
+(define (adde x y) (star (+(cdr (car y))x)));Agrega la cantidad deseada 'x' de nodos a un grafo estrella de tamaño 'y'
+
+(define (addc x y) (circ (+(caar y) x)));Agrega la cantidad deseada 'x' de nodos a un grafo cíclico de tamaño 'y'
+
+(define (esStar x y) (remove* (star x) (star y))) ;Elimina desde el primer nodo hasta el nodo 'x' de un grafo estrella de tamaño 'y'
+
+(define (esCirc x y) (remove* (circ (+ x 1)) (circ y))) ;Elimina desde el primer nodo hasta el nodo 'x' de un grafo cíclico de tamaño 'y'
+
+(define (enStar x y) (list* (remove* (star x) (star y)) (cdr(star x)))) ;Elimina el nodo seleccionado 'x' de un grafo estrella de tamaño 'y'
+
+(define (enCirc x y) (list* (remove* (circ (+ x 1)) (circ y)) )) ;Elimina el nodo seleccionado 'x' de un grafo cíclico de tamaño 'y'
+
+(define (star? x) (if (equal? #f (equal? (cdr x) null )) (if(equal? (car(car x)) (car(car(cdr x)))) (star? (list* (cdr x))) "No" ) "Sí" ) ) ;Indica si el grafo X, indicado por parámetro, es estrella
+
+(define (circ? x) (if (equal? #t (equal? (car (car x)) (cdr (last x)))) (proceso x) "No")) ;Indica si el grafo X, indicado por parámetro, es o no un grafo de tipo cíclico
+
+(define (proceso x) (if (equal? #f (equal? (cdr x) null)) (if(equal? (cdr(car x)) (car(car(cdr x)))) (proceso (list* (cdr x))) "No" ) "Sí")) ;Verifica si se cumple el ciclo del medio de la lista de la funcion "circ?"
