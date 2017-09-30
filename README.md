@@ -5,4 +5,4 @@ Damian Reyes
 Victor Rios
 
 Material en git:
-Imágenes, Pdf, Código racket, Código latex.
+Imágenes, Pdf, Código racket, Código latex, Presentacion ppt.
